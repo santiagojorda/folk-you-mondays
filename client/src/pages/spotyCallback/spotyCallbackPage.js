@@ -1,5 +1,6 @@
 import './spotyCallbackPage.sass'
 import { useLocation } from 'react-router-dom'
+import spotyStorage from '../../utils/spotifyStorageManager'
 
 export default function SpotyCallbackPage(){
 
@@ -14,12 +15,7 @@ export default function SpotyCallbackPage(){
     console.log(refresh_token)
     console.log(expires_in)
 
-    const date_today = new Date().getTime() 
-    const date_expirecy = date_today + (expires_in * 1000)
-
-    localStorage.setItem('access_token', access_token)
-    localStorage.setItem('refresh_token', refresh_token)
-    localStorage.setItem('expires_in', date_expirecy)
+    spotyStorage.saveTokens(access_token, refresh_token, expires_in)
     
     window.location = 'http://localhost:3000/'
 

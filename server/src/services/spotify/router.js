@@ -5,5 +5,6 @@ const ctrlr = require('./controller')
 
 router.get('/login', ctrlr.userAuth)
 router.get('/callback', ctrlr.requestTokens)
+router.get('/getCover', ctrlr.getListSongs)
 
 module.exports = router 

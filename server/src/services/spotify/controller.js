@@ -10,9 +10,9 @@ const SPOTY_AUTH_PATH = SPOTY_AUTH_URL + '/authorize?'
 const SPOTY_TOKEN_PATH = SPOTY_AUTH_URL + '/api/token'
 const SPOTY_CURRENT_USER = SPOTY_API_URL + '/v1/me'
 const SPOTY_USER_PLAYLISTS = SPOTY_CURRENT_USER + '/playlists'
+const SPOTY_PLAYLISTS = SPOTY_API_URL + '/v1/playlists'
 
 
-let access_token = ''
 let refresh_token = ''
 
 const setHeader = (key, value) => {
@@ -25,7 +25,7 @@ const encoded_cred = base64.encode(`${creds.CLIENT_ID}:${creds.CLIENT_SECRET}`);
 const setBasicAuthorizationHeader = setHeader('Authorization', 'Basic ' +  encoded_cred)
 const setJsonContentType = setHeader('Content-type', 'application/json')
 const setFormContentType = setHeader('Content-Type', 'application/x-www-form-urlencoded')
-const setBearerAuthorizationHeader = () => setHeader('Authorization', 'Bearer ' +  access_token)
+const setBearerAuthorizationHeader = (access_token) => setHeader('Authorization', 'Bearer ' +  access_token)
 
 module.exports.userAuth = (req, res) => {
     console.log('AUTH')  
@@ -93,6 +93,30 @@ module.exports.refreshToken = (req, res) => {
                 expires_in: body.expires_in
             }))
       }
+      else{
+        console.error(err)
+      }
     })
 
+}
+
+module.exports.getListSongs = (req, res) => {
+  const playlist_id = req.query.playlist_id;
+  const access_token = req.query.access_token;
+
+  superagent
+    .get(SPOTY_PLAYLISTS + `/${playlist_id}/tracks?` + 
+      querystring.stringify({
+        limit: 10
+      }))
+    .use(setBearerAuthorizationHeader(access_token))
+    .end( (err, response) => {
+      if (!err && response.statusCode === 200) {
+        console.log(response.body)
+        res.json(response.body)
+      }
+      else{
+        console.error(err)
+      }
+    })
 }

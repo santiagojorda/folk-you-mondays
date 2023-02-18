@@ -8,9 +8,6 @@ import MainPage from './pages/main/mainPage';
 import SignoutPage from './pages/signout/signoutPage';
 import SpotyCallbackPage from './pages/spotyCallback/spotyCallbackPage';
 
-
-
-
 function App() {
 
 

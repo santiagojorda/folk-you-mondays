@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 require('./config/env-vars-init')
+var cors = require('cors');
+app.use(cors())
 
 app.use('/', require('./routes/root'))
 

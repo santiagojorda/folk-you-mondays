@@ -1,19 +1,17 @@
 import { SignOut } from '../../components/buttons/spotifyLogin/btnSpotifyLogin'
-import Playlist from '../../components/playlist/playlist'
+import Playlist from '../../components/spotify/playlist/playlist'
 import './mainPage.sass'
+import spotyStorage from '../../utils/spotifyStorageManager'
 
 export default function MainPage(){
-    
-    const token = localStorage.getItem('access_token') 
 
     return (
         <>
 
             <Playlist />
-            { (token !== null)
+            { (spotyStorage.thereIsRefreshToken())
                 ? <SignOut />
                 : <> </>
-            
             }
         
         </>

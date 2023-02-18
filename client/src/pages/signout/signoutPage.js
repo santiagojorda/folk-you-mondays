@@ -1,8 +1,9 @@
 import './signoutPage.sass'
+import spotyStorage from '../../utils/spotifyStorageManager'
 
 export default function SignoutPage() {
 
-    localStorage.clear()
+    spotyStorage.clearTokens()
     window.location = 'http://localhost:3000'
 
     const redireccionar = () =>{
