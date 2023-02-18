@@ -21,13 +21,13 @@ const setHeader = (key, value) => {
       return req
     }
 }
-const encoded = base64.encode(`${creds.CLIENT_ID}:${creds.CLIENT_SECRET}`);
-const setBasicAuthorizationHeader = setHeader('Authorization', 'Basic ' +  encoded)
+const encoded_cred = base64.encode(`${creds.CLIENT_ID}:${creds.CLIENT_SECRET}`);
+const setBasicAuthorizationHeader = setHeader('Authorization', 'Basic ' +  encoded_cred)
 const setJsonContentType = setHeader('Content-type', 'application/json')
 const setFormContentType = setHeader('Content-Type', 'application/x-www-form-urlencoded')
 const setBearerAuthorizationHeader = () => setHeader('Authorization', 'Bearer ' +  access_token)
 
-module.exports.authSpotify = (req, res) => {
+module.exports.userAuth = (req, res) => {
     console.log('AUTH')  
     res.redirect(SPOTY_AUTH_PATH +
       querystring.stringify({
@@ -39,7 +39,7 @@ module.exports.authSpotify = (req, res) => {
     )
 }
 
-module.exports.callback = (req, res) => {
+module.exports.requestTokens = (req, res) => {
     let code = req.query.code || null;
     if (code === null) {
       res.redirect('/#' +
@@ -60,12 +60,39 @@ module.exports.callback = (req, res) => {
         .use(setBasicAuthorizationHeader)
         .end((err, response) => {
           if (!err && response.statusCode === 200) {
+
+            const body = response.body
             res.redirect(`http://localhost:3000/callback?`+ 
                 querystring.stringify({
-                    access_token: response.body.access_token,
-                    refresh_token: response.body.refresh_token
+                    access_token: body.access_token,
+                    refresh_token: body.refresh_token,
+                    expires_in: body.expires_in
                 }))
           }
         });
     }
+}
+
+module.exports.refreshToken = (req, res) => {
+  const refresh_token = req.query.refresh_token;
+
+  superagent
+    .post(SPOTY_TOKEN_PATH)
+    .send({
+      grant_type: 'refresh_token',
+      refresh_token: refresh_token
+    })
+    .use(setBasicAuthorizationHeader)
+    .end( (err, response) => {
+      if (!err && response.statusCode === 200) {
+        const body = response.body
+        res.redirect(`http://localhost:3000/callback?`+ 
+            querystring.stringify({
+                access_token: body.access_token,
+                refresh_token: body.refresh_token,
+                expires_in: body.expires_in
+            }))
+      }
+    })
+
 }

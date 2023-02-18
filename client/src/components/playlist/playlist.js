@@ -1,3 +1,4 @@
+import { LoginBtn } from '../buttons/spotifyLogin/btnSpotifyLogin'
 import './playlist.sass'
 import SongList from './songList/songList'
 
@@ -20,10 +21,8 @@ const playlist = {
 
 export default function Playlist(){
 
-    const token = localStorage.getItem('access_token') 
-    const login = () => {
-        window.location = 'http://localhost:4000/spotify/login'
-    }
+    const token = localStorage.getItem('access_token')
+
     return (
         <>
             <div className="container">
@@ -35,7 +34,7 @@ export default function Playlist(){
                         { 
                             (token !== null) 
                                 ? <SongList list={songList}/>
-                                : <button onClick={login}>Login</button>
+                                : <LoginBtn />
                         }
                     </div>
                 </div>

@@ -3,7 +3,7 @@ const router = express.Router()
 
 const ctrlr = require('./controller')
 
-router.get('/login', ctrlr.authSpotify)
-router.get('/callback', ctrlr.callback)
+router.get('/login', ctrlr.userAuth)
+router.get('/callback', ctrlr.requestTokens)
 
 module.exports = router 
